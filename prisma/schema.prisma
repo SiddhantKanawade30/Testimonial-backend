@@ -40,6 +40,9 @@ model Campaign{
 
 model Testimonial{
   id String @id @default(cuid())
+  userId String
+  favourite Boolean @default(false)
+  archived Boolean @default(false)
   campaign Campaign @relation(fields: [campaignId], references: [id])
   campaignId String
   name String
