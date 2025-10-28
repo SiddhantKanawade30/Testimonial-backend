@@ -46,7 +46,7 @@ export const getCampaigns = async (req, res) => {
         const campaigns = await prisma.campaign.findMany({
             where: { userId: userId }
         });
-        res.status(200).json({ campaigns });
+        res.status(200).json(campaigns);
     }
     catch (error) {
         console.log(error);

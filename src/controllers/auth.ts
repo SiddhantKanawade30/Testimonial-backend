@@ -53,7 +53,7 @@ export const signin = async(req:Request, res: Response) =>{
         })
 
         if(!user){
-            res.json({
+            res.status(400).json({
                 message : "user does not exist in our database"
             })
             return
@@ -62,22 +62,23 @@ export const signin = async(req:Request, res: Response) =>{
         const decodedPassword = bcrypt.compare(user.password, password)
 
         if(!decodedPassword){
-            res.json({
+            res.status(400).json({
                 message : "incorrect password"
             })
             return
         }
 
-        const token =  jwt.sign({userId : user.id}, JWT_SECRET as string, {expiresIn: "1h"})
+        const token =  jwt.sign({userId : user.id}, JWT_SECRET as string)
 
-        res.json({
+        res.status(200).json({
             message : "signin successful",
             token
         })
 
     }catch(e){
 
-        res.send("something went wrong")
-        console.log(e)
+        res.status(500).json({
+            message : "something went wrong"
+        })
     }
 }

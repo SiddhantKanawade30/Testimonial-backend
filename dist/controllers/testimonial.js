@@ -15,7 +15,7 @@ export const createTestimonial = async (req, res) => {
     }
 };
 export const getAllTestimonials = async (req, res) => {
-    const { campaignId } = req.body;
+    const { campaignId } = req.params;
     try {
         const testimonials = await prisma.testimonial.findMany({
             where: {
@@ -165,7 +165,7 @@ export const getTestimonialsByCampaign = async (req, res) => {
     }
 };
 export const embedTestimonial = async (req, res) => {
-    const { campaignId } = req.body;
+    const { campaignId } = req.params;
     try {
         const testimonials = await prisma.testimonial.findMany({
             where: {

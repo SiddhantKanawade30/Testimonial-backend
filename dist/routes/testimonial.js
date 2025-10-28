@@ -10,7 +10,7 @@ import { getFavouriteTestimonials } from "../controllers/testimonial.js";
 import { embedTestimonial } from "../controllers/testimonial.js";
 const testimonialRouter = Router();
 testimonialRouter.post("/create", createTestimonial);
-testimonialRouter.get("/get", middleware, getAllTestimonials);
+testimonialRouter.get("/get/:campaignId", middleware, getAllTestimonials);
 testimonialRouter.delete("/delete", middleware, deleteTestimonial);
 testimonialRouter.put("/archive", middleware, archiveTestimonial);
 testimonialRouter.put("/unarchive", middleware, unarchiveTestimonial);
@@ -18,6 +18,6 @@ testimonialRouter.put("/favourite", middleware, favouriteTestimonial);
 testimonialRouter.put("/unfavourite", middleware, unfavouriteTestimonial);
 testimonialRouter.get("/archived", middleware, getArchivedTestimonials);
 testimonialRouter.get("/favourite", middleware, getFavouriteTestimonials);
-testimonialRouter.get("/embed", middleware, embedTestimonial);
+testimonialRouter.get("/embed/:campaignId", middleware, embedTestimonial);
 export default testimonialRouter;
 //# sourceMappingURL=testimonial.js.map
