@@ -4,6 +4,28 @@ import { middleware } from "../middleware/middleware.js"
 const prisma = new PrismaClient()
 
 
+export const getCampaignById = async (req: Request, res: Response) => {
+    const { campaignId } = req.params;
+    
+    try {
+        const campaign = await prisma.campaign.findFirst({
+            where: { id: campaignId as any }
+        })
+
+        if(campaign){
+            res.status(200).json(campaign)
+        }
+        else{
+            return res.status(404).json({ message: "Campaign not found" })
+        }   
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Failed to get campaign" })
+    }
+}
+
+
 export const createCampaign = async(req: Request, res: Response) =>{
        const { title , description } = req.body
        //@ts-ignore
