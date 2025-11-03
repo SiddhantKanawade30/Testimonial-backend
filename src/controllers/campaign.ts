@@ -44,7 +44,7 @@ export const createCampaign = async(req: Request, res: Response) =>{
             }
         })
 
-        res.status(201).json({newCampaign})
+        res.status(200).json({newCampaign})
         
        }catch(error){
         console.log(error)

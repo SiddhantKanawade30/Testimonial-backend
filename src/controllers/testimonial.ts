@@ -22,13 +22,16 @@ export const getAllTestimonials = async (req: Request, res: Response) => {
     const { campaignId } = req.params
 
     try {
-        const testimonials = await prisma.testimonial.findMany({
+        const data = await prisma.campaign.findFirst({
             where: {
-                campaignId: campaignId as string
+                id: campaignId as string
+            },
+            include: {
+                testimonials: true
             }
         })
 
-        res.send(testimonials)
+        res.send(data)
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: "Internal server error" })

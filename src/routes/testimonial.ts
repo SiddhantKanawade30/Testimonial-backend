@@ -4,10 +4,7 @@ import { createTestimonial, getAllTestimonials } from "../controllers/testimonia
 import { archiveTestimonial, deleteTestimonial } from "../controllers/testimonial.js";
 import { unarchiveTestimonial } from "../controllers/testimonial.js";
 import { favouriteTestimonial } from "../controllers/testimonial.js";
-import { unfavouriteTestimonial } from "../controllers/testimonial.js";
-import { getArchivedTestimonials } from "../controllers/testimonial.js";
-import { getFavouriteTestimonials } from "../controllers/testimonial.js";
-import { embedTestimonial } from "../controllers/testimonial.js";
+import { getFavouriteTestimonials, embedTestimonial, getArchivedTestimonials, unfavouriteTestimonial } from "../controllers/testimonial.js";
 
 
 const testimonialRouter = Router();
