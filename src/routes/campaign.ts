@@ -10,4 +10,5 @@ CampaignRouter.get("/get", middleware, getCampaigns)
 CampaignRouter.get("/get/:campaignId", getCampaignById)
 CampaignRouter.put("/edit", middleware, editCampaign)   
 
-export default CampaignRouter
+
+export default CampaignRouter;

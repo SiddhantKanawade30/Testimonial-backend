@@ -1,4 +1,4 @@
-import express, { type Request, type Response , Router } from "express"
+import express, { type Request, type Response, Router } from "express"
 import { PrismaClient } from "@prisma/client"
 import { middleware } from "../middleware/middleware.js"
 const prisma = new PrismaClient()
@@ -6,18 +6,18 @@ const prisma = new PrismaClient()
 
 export const getCampaignById = async (req: Request, res: Response) => {
     const { campaignId } = req.params;
-    
+
     try {
         const campaign = await prisma.campaign.findFirst({
             where: { id: campaignId as any }
         })
 
-        if(campaign){
+        if (campaign) {
             res.status(200).json(campaign)
         }
-        else{
+        else {
             return res.status(404).json({ message: "Campaign not found" })
-        }   
+        }
 
     } catch (error) {
         console.log(error)
@@ -26,75 +26,99 @@ export const getCampaignById = async (req: Request, res: Response) => {
 }
 
 
-export const createCampaign = async(req: Request, res: Response) =>{
-       const { title , description } = req.body
-       //@ts-ignore
-       const userId = req.userId
+export const createCampaign = async (req: Request, res: Response) => {
+    const { title, description, websiteUrl, category } = req.body;
+    const FRONTEND_URL = process.env.FRONTEND_URL;
+    //@ts-ignore
+    const userId = req.userId;
 
-       try{
-        // Generate a unique share link for the campaign
-        const shareLink = `${req.protocol}://${req.get('host')}/campaign/${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-        
-        const newCampaign = await prisma.campaign.create({
-            data: {
-                title ,
-                description ,
-                shareLink,
-                userId 
-            }
+    try {
+
+        const result = await prisma.$transaction(async(tx)=>{
+           
+            const newCampaign = await tx.campaign.create({
+                data: {
+                    title,
+                    description,
+                    websiteUrl,
+                    category,
+                    userId
+                }
+            })
+
+            const shareLink = `${FRONTEND_URL}/${newCampaign.id}`
+
+        const updatedCampaign = await tx.campaign.update({
+            where: { id: newCampaign.id },
+            data: { 
+                shareLink
+             }
         })
 
-        res.status(200).json({newCampaign})
-        
-       }catch(error){
+        return updatedCampaign;
+
+        })
+
+        res.status(200).json({ result })
+
+    } catch (error) {
         console.log(error)
-        res.status(500).json({message: "Internal server error"})
-       }
+        res.status(500).json({ message: "Internal server error" })
+    }
 }
 
 
-export const deleteCampaign = async(req: Request, res: Response) =>{
+export const deleteCampaign = async (req: Request, res: Response) => {
     const { campaignId } = req.body
     //@ts-ignore
     const userId = req.userId
-    try{
+    try {
         const deletedCampaign = await prisma.campaign.delete({
-            where: { id: campaignId as string , userId: userId as string }
+            where: { id: campaignId as string, userId: userId as string }
         })
-        res.status(200).json({deletedCampaign})
-    }catch(error){
+        res.status(200).json({ deletedCampaign })
+    } catch (error) {
         console.log(error)
-        res.status(500).json({message: "Failed to delete campaign"})
+        res.status(500).json({ message: "Failed to delete campaign" })
     }
 }
 
 
-export const getCampaigns = async(req: Request, res: Response) =>{
+export const getCampaigns = async (req: Request, res: Response) => {
     //@ts-ignore
     const userId = req.userId
-    try{
+    try {
         const campaigns = await prisma.campaign.findMany({
-            where: { userId: userId as string }
+            where: {
+                userId: userId as string
+            },
+            include: {
+                _count: {
+                    select: {
+                        testimonials: true
+                    }
+                }
+            }
         })
         res.status(200).json(campaigns)
-    }catch(error){
+    } catch (error) {
         console.log(error)
-        res.status(500).json({message: "Failed to get campaigns"})
+        res.status(500).json({ message: "Failed to get campaigns" })
     }
 }
 
-export const editCampaign = async(req: Request, res: Response) =>{
-    const { campaignId , title , description } = req.body
+export const editCampaign = async (req: Request, res: Response) => {
+    const { campaignId, title, description } = req.body
     //@ts-ignore
     const userId = req.userId
-    try{
+    try {
         const editedCampaign = await prisma.campaign.update({
-            where: { id: campaignId as string , userId: userId as string },
-            data: { title , description }
+            where: { id: campaignId as string, userId: userId as string },
+            data: { title, description }
         })
-        res.status(200).json({editedCampaign})
-    }catch(error){
+        res.status(200).json({ editedCampaign })
+    } catch (error) {
         console.log(error)
-        res.status(500).json({message: "Failed to edit campaign"})
+        res.status(500).json({ message: "Failed to edit campaign" })
     }
 }   

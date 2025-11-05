@@ -28,13 +28,14 @@ model Campaign{
      id String @id @default(cuid())
      title String
      description String
-     shareLink String 
+     websiteUrl String?
+     category String?
+     shareLink String? @unique
      user User @relation(fields: [userId] , references: [id])
      userId String
      testimonials Testimonial[]
      createdAt DateTime @default(now())
 }
-
 
 
 model Testimonial{
