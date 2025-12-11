@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 
 export const createTestimonial = async (req: Request, res: Response) => {
-    const { campaignId, name, email, message, rating } = req.body;
+    const { campaignId, name, email, position, testimonialType, message, rating, playbackId } = req.body;
 
     // Ensure rating is a number, default to 5 if not provided
     let ratingValue = rating ? Number(rating) : 5;
@@ -13,10 +13,13 @@ export const createTestimonial = async (req: Request, res: Response) => {
         const newTestimonial = await prisma.testimonial.create({
             data: { 
                 campaignId, 
-                name, 
+                name,
                 email, 
+                position,
+                testimonialType,    
                 message, 
-                rating: ratingValue 
+                rating: ratingValue,
+                playbackId
             }
         })
         res.status(201).json({ newTestimonial })

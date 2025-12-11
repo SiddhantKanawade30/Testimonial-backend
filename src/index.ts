@@ -14,11 +14,14 @@ const PORT = process.env.PORT
 app.use(express.json());
 app.use(cors());
 
+console.log("Mounting routes...");
 
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/campaigns", campaignRouter)
 app.use("/api/v1/testimonials", testimonialRouter)
 app.use("/api/v1/user", userRouter)
+
+console.log("Routes mounted successfully");
 
 
 

@@ -5,12 +5,14 @@ import { archiveTestimonial, deleteTestimonial } from "../controllers/testimonia
 import { unarchiveTestimonial } from "../controllers/testimonial.js";
 import { favouriteTestimonial } from "../controllers/testimonial.js";
 import { getFavouriteTestimonials, embedTestimonial, getArchivedTestimonials, unfavouriteTestimonial } from "../controllers/testimonial.js";
-import { createVideoUpload } from "../controllers/video.js";
+import { createVideoUpload, VideoAssetFromUpload } from "../controllers/video.js";
+import { Video } from "@mux/mux-node/resources/index.mjs";
 
 const testimonialRouter = Router();
 
 testimonialRouter.post("/create", createTestimonial)
-testimonialRouter.get("/create-video-upload", createVideoUpload)
+testimonialRouter.post("/create-video-upload", createVideoUpload)
+testimonialRouter.get("/get-asset-from-upload/:uploadId", VideoAssetFromUpload)
 testimonialRouter.get("/get/all", middleware, getAllUserTestimonials)
 testimonialRouter.get("/get/:campaignId", middleware, getTestimonialsByCampaign);
 
