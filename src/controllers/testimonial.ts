@@ -31,15 +31,43 @@ export const createTestimonial = async (req: Request, res: Response) => {
       },
     });
 
-    const testimonialCount = await prisma.testimonial.count({
-      where: { campaignId },
+    if(testimonialType === "text"){
+      const testimonialCount = await prisma.testimonial.count({
+      where: {
+         campaignId,
+        testimonialType: "text"
+       },
     });
 
     if (campaign?.user.plan == "FREE" && testimonialCount >= 5) {
       return res.status(403).json({
-        message: "Free plan only allows 5 testimonials per campaign",
+        message: "Free plan only allows 5 text testimonials per campaign",
       });
     }
+
+    }else if(testimonialType === "video"){
+      const testimonialCount = await prisma.campaign.findUnique({
+        where:{
+          id: campaignId
+        },
+        select:{
+          user:{
+            select:{
+              videoCount:true
+            }
+          }
+        }
+      })
+
+      if (campaign?.user.plan == "FREE" && (testimonialCount?.user.videoCount ?? 0) >= 2) {
+        return res.status(403).json({
+          message: "Free plan only allows 2 video testimonials per campaign",
+        });
+      }
+    }
+    
+
+    
 
     const newTestimonial = await prisma.testimonial.create({
       data: {
@@ -53,6 +81,15 @@ export const createTestimonial = async (req: Request, res: Response) => {
         playbackId,
       },
     });
+
+    await prisma.user.update({
+      where:{
+        id: campaign?.userId as string
+      },
+      data:{
+        ...(testimonialType === "video" ? { videoCount: { increment: 1 } } : {})
+      }
+    })
     res.status(201).json({ newTestimonial });
   } catch (error) {
     console.log("Error creating testimonial:", error);

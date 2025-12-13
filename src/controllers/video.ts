@@ -57,7 +57,7 @@ export const createVideoUpload = async (req: Request, res: Response) => {
       new_asset_settings: {
         playback_policies: ["public"],
       },
-      cors_origin: "*", // Optional: Configure CORS if needed
+      cors_origin: "*", 
     });
 
     return res.status(200).json({
