@@ -32,7 +32,8 @@ model User {
   campaigns Campaign[]
   plan      Plan  @default(FREE)
   videoCount  Int @default(0)
-  razaorpaySubId String?
+  razorpaySubId String?
+  planExpiresAt DateTime?
   createdAt DateTime   @default(now())
   usages    Usage[]
 }
@@ -59,7 +60,7 @@ model Testimonial {
   name            String
   email           String
   position        String?
-  testimonialType String?
+  testimonialType TestimonialType?
   playbackId      String?
   message         String?
   rating          Int      @default(5)
