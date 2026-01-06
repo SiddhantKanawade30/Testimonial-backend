@@ -7,11 +7,12 @@ import { favouriteTestimonial } from "../controllers/testimonial.js";
 import { getFavouriteTestimonials, embedTestimonial, getArchivedTestimonials, unfavouriteTestimonial } from "../controllers/testimonial.js";
 import { createVideoUpload, VideoAssetFromUpload } from "../controllers/video.js";
 import { Video } from "@mux/mux-node/resources/index.mjs";
+import { publicLimiter } from "../middleware/ratelimiter.js";
 
 const testimonialRouter = Router();
 
-testimonialRouter.post("/create", createTestimonial)
-testimonialRouter.post("/create-video-upload", createVideoUpload)
+testimonialRouter.post("/create", publicLimiter, createTestimonial)
+testimonialRouter.post("/create-video-upload", publicLimiter, createVideoUpload)
 testimonialRouter.get("/get-asset-from-upload/:uploadId", VideoAssetFromUpload)
 testimonialRouter.get("/get/all", middleware, getAllUserTestimonials)
 testimonialRouter.get("/get/:campaignId", middleware, getTestimonialsByCampaign);

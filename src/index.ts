@@ -8,11 +8,13 @@ import campaignRouter from "./routes/campaign.js"
 import testimonialRouter from "./routes/testimonial.js"
 import { paymentRouter } from "./routes/payment.js"
 import authRouter from "./routes/auth.js"
+import { globalLimiter } from "./middleware/ratelimiter.js";
 
 const app = express()
 const PORT = process.env.PORT
 
 app.use(express.json());
+app.use(globalLimiter);
 app.use(cors());
 
 console.log("Mounting routes...");
