@@ -19,9 +19,11 @@ enum Plan{
   ENTERPRISE
 }
 
-enum TestimonialType{
-  text
-  video
+enum TestimonialType {
+  TEXT
+  VIDEO
+  TWITTER
+  INSTAGRAM
 }
 
 model User {
@@ -62,7 +64,7 @@ model Testimonial {
   position        String?
   testimonialType TestimonialType?
   playbackId      String?
-  message         String?
+  content         String?
   rating          Int      @default(5)
   createdAt       DateTime @default(now())
 }
