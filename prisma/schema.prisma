@@ -19,6 +19,13 @@ enum Plan{
   ENTERPRISE
 }
 
+enum TemplateType {
+  CAROUSEL
+  HORIZONTAL
+  SLANT
+  GRID
+}
+
 enum TestimonialType {
   TEXT
   VIDEO
@@ -50,6 +57,7 @@ model Campaign {
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       String
   testimonials Testimonial[]
+  templateType TemplateType @default(CAROUSEL)
   createdAt    DateTime      @default(now())
 }
 
