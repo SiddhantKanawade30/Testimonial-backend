@@ -120,6 +120,7 @@ export const googleAuth = async (req: Request, res: Response) => {
 
     const email = payload.email;
     const name = payload.name || payload.given_name || "";
+    const profileImage = payload.picture || "";
 
     if (!email) {
       return res.status(400).json({ error: "Email not found in token" });
@@ -141,18 +142,24 @@ export const googleAuth = async (req: Request, res: Response) => {
           email,
           name,
           password: hashedPassword,
+          profileImage,
         }
       });
     } else {
-      // Update user with latest info from Google (if name changed)
-      if (name && name !== user.name) {
-        user = await prisma.user.update({
-          where: { email },
-          data: {
-            name: name,
-          }
-        });
+      // Update user with latest info from Google (if name or profile image changed)
+      const updateData: any = {
+        name: name,
+      };
+      
+      // Only update profileImage if it's different from current one
+      if (profileImage && profileImage !== user.profileImage) {
+        updateData.profileImage = profileImage;
       }
+      
+      user = await prisma.user.update({
+        where: { email },
+        data: updateData
+      });
     }
 
     // generate JWT
@@ -160,7 +167,7 @@ export const googleAuth = async (req: Request, res: Response) => {
       expiresIn: "7d",
     });
 
-    res.json({ token: customToken, user: { email: user.email, name: user.name } });
+    res.json({ token: customToken, user: { email: user.email, name: user.name, profileImage: user.profileImage } });
   } catch (error) {
     console.error("Google auth error:", error);
     res.status(400).json({ error: "Invalid Google token", details: error instanceof Error ? error.message : "Unknown error" });

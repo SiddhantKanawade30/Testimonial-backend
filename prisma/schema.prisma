@@ -38,6 +38,7 @@ model User {
   name      String
   email     String     @unique
   password  String?
+  profileImage     String?
   campaigns Campaign[]
   plan      Plan  @default(FREE)
   videoCount  Int @default(0)
